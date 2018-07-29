@@ -32,6 +32,10 @@ function returnFirstArgument(name) {
  */
 function sumWithDefaults(a, b) {
 
+    if (a === undefined) {
+        a = 0;
+    }
+
     if (b === undefined) {
         b = 100;
     }
@@ -65,8 +69,12 @@ function returnFnResult(fn) {
    console.log(f()); // выведет 13
  */
 function returnCounter(number) {    
-    return function f() {
-        return number = number + 1;
+    return function f() {      
+        if (number === undefined) {
+            number = 0;
+        }
+        
+        return ++number;
     }
 
 }
@@ -105,15 +113,8 @@ function returnArgumentsArray() {
 
    console.log(newSum()) выведет 6
  */
-function bindFunction() {
-    var func = arguments[0],
-        array2 = [];
-
-    for (var i = 1; i<arguments.length; i++) {
-        array2.push(arguments[i]);        
-    }
-
-    return func = func.apply(null, array2);
+function bindFunction(fn, ...arg) { 
+    return fn.bind(this, ...arg);
 
 }
 
