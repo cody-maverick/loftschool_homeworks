@@ -70,7 +70,7 @@ function returnCounter(number) {
             number = 0;
         }
         
-        return number = number + 1;
+        return ++number;
     }
 
 }
