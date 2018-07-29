@@ -65,7 +65,11 @@ function returnFnResult(fn) {
    console.log(f()); // выведет 13
  */
 function returnCounter(number) {    
-    return function f() {
+    return function f() {      
+        if (number === undefined) {
+            number = 0;
+        }
+        
         return number = number + 1;
     }
 
