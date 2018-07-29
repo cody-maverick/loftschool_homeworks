@@ -32,6 +32,10 @@ function returnFirstArgument(name) {
  */
 function sumWithDefaults(a, b) {
 
+    if (a === undefined) {
+        a = 0;
+    }
+
     if (b === undefined) {
         b = 100;
     }
