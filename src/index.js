@@ -35,22 +35,29 @@ function map(array, fn) {
  Напишите аналог встроенного метода reduce для работы с массивами
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
-function reduce(array, fn, initial) {
 
-	var q = initial;
-	if (q === undefined) {
-		q = 0;
-	}
+ function reduce(array, fn, initial) {
+ 	var q;
 
+		if (initial === undefined) {
+				q = array[0];
 
-	for (let i = 0; i < array.length; i++) {				
-		q = fn(q, array[i], i, array);
-		
-	}
+				for (var i = 1; i < array.length; i++) {
+					q = fn(q, array[i], i, array);
+				}
+		} 
+ 		else {
+ 			q = initial;
 
-	return q;
-		
-}
+ 			for (i = 0; i < array.length; i++) {
+ 				q = fn(q, array[i], i, array);
+ 			}
+ 	}
+
+ 	return q;
+
+ }		
+
 
 /*
  Задание 4:
@@ -76,8 +83,46 @@ function upperProps(obj) {
  Напишите аналог встроенного метода slice для работы с массивами
  Посмотрите как работает slice и повторите это поведение для массива, который будет передан в параметре array
  */
+
 function slice(array, from, to) {
+		var arr = [];
+		if (((from === undefined) && (to === undefined)) || (to < 0) || ((from < 0) && (to !== undefined))){
+				arr = array;
+		}
+		else if ((from >= 0) && (to === undefined)) {
+			to = array.length;
+			for (let i = from; i < to; i++) {
+				arr.push(array[i]);
+			}
+		}
+		else if ((from < 0) && (to === undefined)) {
+			to = array.length;
+			for (let i = to - Math.abs(from); i < to; i++) {
+				arr.push(array[i]);
+			}
+		}
+		else if (to > array.length) {
+			to = array.length;
+			for (let i = from; i < to; i++) {
+				arr.push(array[i]);
+			}
+		}
+		// else if ((from < 0) && (to < 0 ) && ((array.length - Math.abs(from)>(array.length - Math.abs(to))))){
+		// 	from = array.length - Math.abs(from);
+		// 	to = array.length - Math.abs(to);
+		// 	for (let i = from; i < to; i++) {
+		// 		arr.push(array[i]);
+		// 	}
+		// }	
+		else {
+			for (let i = from; i < to; i++) {
+				arr.push(array[i]);
+			}
+		}
+		return arr;
 }
+
+console.log(slice([0,1,2,3,4,5,6,7,8,9], -8))
 
 /*
  Задание 6 *:
@@ -86,6 +131,7 @@ function slice(array, from, to) {
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
 function createProxy(obj) {
+
 }
 
 export {
