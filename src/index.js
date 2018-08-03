@@ -7,12 +7,10 @@
  Посмотрите как работает forEach и повторите это поведение для массива, который будет передан в параметре array
  */
 function forEach(array, fn) {
-		for (let i = 0; i < array.length; i++) {
-				fn(array[i], i, array);
-		}
-		
+    for (let i = 0; i < array.length; i++) {
+        fn (array[i], i, array);
+    }
 }
-
 
 /*
  Задание 2:
@@ -21,12 +19,13 @@ function forEach(array, fn) {
  Посмотрите как работает map и повторите это поведение для массива, который будет передан в параметре array
  */
 function map(array, fn) {
-	let newArray = [];
-	for (let i = 0; i < array.length; i++) {
-		newArray[i] = fn(array[i], i, array);
-	}
-	return newArray;
+    let newArray = [];
 
+    for (let i = 0; i < array.length; i++) {
+        newArray[i] = fn(array[i], i, array);
+    }
+
+    return newArray;
 }
 
 /*
@@ -35,29 +34,25 @@ function map(array, fn) {
  Напишите аналог встроенного метода reduce для работы с массивами
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
+function reduce(array, fn, initial) {
+    var q;
 
- function reduce(array, fn, initial) {
- 	var q;
+    if (initial === undefined) {
+        q = array[0];
 
-		if (initial === undefined) {
-				q = array[0];
+        for (var i = 1; i < array.length; i++) {
+            q = fn(q, array[i], i, array);
+        }
+    } else {
+        q = initial;
 
-				for (var i = 1; i < array.length; i++) {
-					q = fn(q, array[i], i, array);
-				}
-		} 
- 		else {
- 			q = initial;
+        for (i = 0; i < array.length; i++) {
+            q = fn(q, array[i], i, array);
+        }
+    }
 
- 			for (i = 0; i < array.length; i++) {
- 				q = fn(q, array[i], i, array);
- 			}
- 	}
-
- 	return q;
-
- }		
-
+    return q;
+}
 
 /*
  Задание 4:
@@ -68,13 +63,15 @@ function map(array, fn) {
    upperProps({ name: 'Сергей', lastName: 'Петров' }) вернет ['NAME', 'LASTNAME']
  */
 function upperProps(obj) {
-		var n, g = [];
-		for (let key in obj) {
-				n = key.toUpperCase();
-				g.push(n);
-		}
+    var n,
+        g = [];
 
-		return g;
+    for (let key in obj) {
+        n = key.toUpperCase();
+        g.push(n);
+    }
+
+    return g;
 }
 
 /*
@@ -85,44 +82,32 @@ function upperProps(obj) {
  */
 
 function slice(array, from, to) {
-		var arr = [];
-		if (((from === undefined) && (to === undefined)) || (to < 0) || ((from < 0) && (to !== undefined))){
-				arr = array;
-		}
-		else if ((from >= 0) && (to === undefined)) {
-			to = array.length;
-			for (let i = from; i < to; i++) {
-				arr.push(array[i]);
-			}
-		}
-		else if ((from < 0) && (to === undefined)) {
-			to = array.length;
-			for (let i = to - Math.abs(from); i < to; i++) {
-				arr.push(array[i]);
-			}
-		}
-		else if (to > array.length) {
-			to = array.length;
-			for (let i = from; i < to; i++) {
-				arr.push(array[i]);
-			}
-		}
-		// else if ((from < 0) && (to < 0 ) && ((array.length - Math.abs(from)>(array.length - Math.abs(to))))){
-		// 	from = array.length - Math.abs(from);
-		// 	to = array.length - Math.abs(to);
-		// 	for (let i = from; i < to; i++) {
-		// 		arr.push(array[i]);
-		// 	}
-		// }	
-		else {
-			for (let i = from; i < to; i++) {
-				arr.push(array[i]);
-			}
-		}
-		return arr;
-}
+    var arr = [];
 
-console.log(slice([0,1,2,3,4,5,6,7,8,9], -8))
+    if (from === undefined) {
+        from = 0;
+    }
+    if (to === undefined) {
+        to = array.length;
+    }
+    if (to < 0) {
+        to = array.length + to;
+    }
+    if (to > array.length) {
+        to = array.length;
+    }
+    if (from < 0 && from < (array.length * -1)) {
+        from = 0;
+    }
+    if (from < 0 && from >= (array.length * -1)) {
+        from = array.length + from;
+    }
+    for (var i = from; i < to; i++) {
+        arr.push(array[i]);
+    }
+
+    return arr;
+}
 
 /*
  Задание 6 *:
@@ -130,8 +115,17 @@ console.log(slice([0,1,2,3,4,5,6,7,8,9], -8))
  Функция принимает объект и должна вернуть Proxy для этого объекта
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
-function createProxy(obj) {
 
+function createProxy(obj) {
+    var proxy = new Proxy(obj, {
+        set(obj, property, value) {
+            obj[property] = value * value;
+
+            return true;
+        }
+    })
+
+    return proxy;
 }
 
 export {
