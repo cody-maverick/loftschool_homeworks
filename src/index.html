@@ -3,9 +3,38 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<script src="index.js"></script>
+	<script src="index.js"></script>	
 </head>
 <body>
-	
+  <div class="some-class-1">
+    <b>привет!</b>
+    <b class="some-class-1 some-class-2">loftschool</b>
+  </div>
 </body>
+
+  <script>
+    function collectDOMStat(root) {
+     let obj = {}, text = 0;
+
+     for (let i = 0; i < root.childNodes.length; i++) {
+      let innerElem = root.childNodes[i];
+      console.log(innerElem.classList);
+
+      if(innerElem.nodeType === 3) {
+        text++ ;        
+      }
+      else if (innerElem.nodeType === 1) {
+
+        collectDOMStat(innerElem);    
+      }
+   }
+   obj['texts'] = text;
+
+   return obj;
+ }
+
+ console.log(collectDOMStat(document.body));
+
+</script>
+
 </html>
