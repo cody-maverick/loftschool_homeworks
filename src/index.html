@@ -6,34 +6,48 @@
 	<script src="index.js"></script>	
 </head>
 <body>
-  <div class="some-class-1">
-    <b>привет!</b>
-    <b class="some-class-1 some-class-2">loftschool</b>
-  </div>
+  
+
 </body>
+<script>
+const homeworkContainer = document.body;
+const button = document.createElement('button');
+homeworkContainer.appendChild(button);
 
-  <script>
-    function collectDOMStat(root) {
-     let obj = {}, text = 0;
+  button.addEventListener('click', function(e) {
+  e.preventDefault();
+  newDiv = document.createElement('div');
+  homeworkContainer.appendChild(newDiv);
 
-     for (let i = 0; i < root.childNodes.length; i++) {
-      let innerElem = root.childNodes[i];
-      console.log(innerElem.classList);
+  newDiv.style.width = getRandomInt(100, 500) + 'px';
+  newDiv.style.height = getRandomInt(100, 500) + 'px';
+  newDiv.style.background = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+  newDiv.style.position = 'absolute';
+  newDiv.style.top = getRandomInt(50, 800) + 'px';
+  newDiv.style.left = getRandomInt(50, 800) + 'px';
 
-      if(innerElem.nodeType === 3) {
-        text++ ;        
-      }
-      else if (innerElem.nodeType === 1) {
+  var handleClick = function(e) {
+    e.preventDefault();
+    e.target.addEventListener('mousemove', handleMove);    
+  };
 
-        collectDOMStat(innerElem);    
-      }
-   }
-   obj['texts'] = text;
+  var handleMove = function(e) {
+    const target = e.target;    
+    target.style.left = e.clientX + 'px';
+    target.style.top = e.clientY + 'px';
+  };
 
-   return obj;
- }
+  newDiv.addEventListener('mousedown', handleMove);
 
- console.log(collectDOMStat(document.body));
+
+
+
+
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+});
 
 </script>
 
