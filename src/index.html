@@ -7,31 +7,57 @@
 </head>
 <body>
   <div class="some-class-1">
-    <b>привет!</b>
+    <b>привет!</b>  
     <b class="some-class-1 some-class-2">loftschool</b>
   </div>
 </body>
 
   <script>
-    function collectDOMStat(root) {
-     let obj = {}, text = 0;
+let text = 0;
+let obj = {
+  tags: {},
+  classes: {},
+  texts: 0
+};
 
-     for (let i = 0; i < root.childNodes.length; i++) {
-      let innerElem = root.childNodes[i];
-      console.log(innerElem.classList);
+function collectDOMStat(root) {
 
-      if(innerElem.nodeType === 3) {
-        text++ ;        
+ for (let i = 0; i < root.childNodes.length; i++) {
+  let innerElem = root.childNodes[i]; 
+
+  if(innerElem.nodeType === 3) {
+    text++ ;              
+  }
+  else if (innerElem.nodeType === 1) {
+    let tag = innerElem.tagName,
+        classes = innerElem.classList;
+
+    // console.log(classes.length);
+
+    if (tag in obj.tags) {
+      obj.tags[tag]++;
+    }
+    else {
+      obj.tags[tag] = 1;
+    }  
+
+    for (let i = 0; i < classes.length; i++) {
+      if (classes[i] in obj.classes) {
+        obj.classes[classes[i]]++;
+      } else {
+        obj.classes[classes[i]] = 1;
       }
-      else if (innerElem.nodeType === 1) {
+      // console.log(classes[i]);
+    };
 
-        collectDOMStat(innerElem);    
-      }
-   }
-   obj['texts'] = text;
+    collectDOMStat(innerElem);    
+  }
+}
 
-   return obj;
- }
+obj['texts'] = text;
+
+return obj;
+}
 
  console.log(collectDOMStat(document.body));
 

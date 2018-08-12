@@ -12,7 +12,8 @@
  */
 function createDivWithText(text) {
     var div = document.createElement('div');
-        div.textContent = text;
+
+    div.textContent = text;
 
     return div;
 }
@@ -23,7 +24,8 @@ function createDivWithText(text) {
  Функция должна вставлять элемент, переданный в переметре what в начало элемента, переданного в параметре where
 
  Пример:
-   prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
+   prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым
+   аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
     var inn = where.insertBefore(what, where.firstChild);
@@ -36,7 +38,8 @@ function prepend(what, where) {
 
  3.1: Функция должна перебрать все дочерние элементы узла, переданного в параметре where
 
- 3.2: Функция должна вернуть массив, состоящий из тех дочерних элементов следующим соседом которых является элемент с тегом P
+ 3.2: Функция должна вернуть массив, состоящий из тех дочерних элементов следующим соседом которых
+ является элемент с тегом P
 
  Пример:
    Представим, что есть разметка:
@@ -48,9 +51,10 @@ function prepend(what, where) {
       <p></p>
    </dody>
 
-   findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
+   findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к.
+   следующим соседом этих элементов является элемент с тегом P
  */
- function findAllPSiblings(where) {
+function findAllPSiblings(where) {
     var tagsArray = [];
 
     for (let i = 0; i < where.children.length - 1; i++) {
@@ -62,11 +66,11 @@ function prepend(what, where) {
     return tagsArray;
 }
 
-
 /*
  Задание 4:
 
- Функция представленная ниже, перебирает все дочерние узлы типа "элемент" внутри узла переданного в параметре where и возвращает массив из текстового содержимого найденных элементов
+ Функция представленная ниже, перебирает все дочерние узлы типа "элемент" внутри узла переданного в параметре where и
+ возвращает массив из текстового содержимого найденных элементов
  Но похоже, что в код функции закралась ошибка и она работает не так, как описано.
 
  Необходимо найти и исправить ошибку в коде так, чтобы функция работала так, как описано выше.
@@ -116,7 +120,8 @@ function deleteTextNodes(where) {
 /*
  Задание 6:
 
- Выполнить предудыщее задание с использование рекурсии - то есть необходимо заходить внутрь каждого дочернего элемента (углубляться в дерево)
+ Выполнить предудыщее задание с использование рекурсии - то есть необходимо заходить внутрь каждого дочернего
+ элемента (углубляться в дерево)
 
  Задачу необходимо решить без использования рекурсии, то есть можно не уходить вглубь дерева.
  Так же будьте внимательны при удалении узлов, т.к. можно получить неожиданное поведение при переборе узлов
@@ -125,24 +130,20 @@ function deleteTextNodes(where) {
    После выполнения функции, дерево <span> <div> <b>привет</b> </div> <p>loftchool</p> !!!</span>
    должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
-function deleteTextNodesRecursive(where){
+function deleteTextNodesRecursive(where) {
 
-  for (let i = 0; i < where.childNodes.length; i++) {
+    for (let i = 0; i < where.childNodes.length; i++) {
+        let innerElem = where.childNodes[i];
 
-    let innerElem = where.childNodes[i];
-
-    if(innerElem.nodeType === 3) {
-        where.removeChild(innerElem);
-        i--;
+        if (innerElem.nodeType === 3) {
+            where.removeChild(innerElem);
+            i--;
+        } else if (innerElem.nodeType === 1) {
+            deleteTextNodesRecursive(innerElem);
+        }
     }
-    else if (innerElem.nodeType === 1) {
-      deleteTextNodesRecursive(innerElem);
-    }
 
-  }
-
-  return where;
-
+    return where;
 }
 
 /*
@@ -165,29 +166,44 @@ function deleteTextNodesRecursive(where){
      texts: 3
    }
  */
+let obj = {
+        tags: {},
+        classes: {},
+        texts: 0
+    },
+    text = 0;
+
 function collectDOMStat(root) {
-  let obj;
 
+    for (let i = 0; i < root.childNodes.length; i++) {
+        let innerElem = root.childNodes[i]; 
+    
+        if (innerElem.nodeType === 3) {
+            text++ ;              
+        } else if (innerElem.nodeType === 1) {
+            let tag = innerElem.tagName,
+                classes = innerElem.classList;   
 
- for (let i = 0; i < where.childNodes.length; i++) {
+            if (tag in obj.tags) {
+                obj.tags[tag]++;
+            } else {
+                obj.tags[tag] = 1;
+            }
 
-  let innerElem = where.childNodes[i];
+            for (let i = 0; i < classes.length; i++) {
+                if (classes[i] in obj.classes) {
+                    obj.classes[classes[i]]++;
+                } else {
+                    obj.classes[classes[i]] = 1;
+                }      
+            }    
+            collectDOMStat(innerElem);    
+        }
+    }
 
-  
-
-  if(innerElem.nodeType === 3) {
-    let text = text + 1 ;
-    i--;
-  }
-  else if (innerElem.nodeType === 1) {
-    deleteTextNodesRecursive(innerElem);
-  }
-
-}
-
-obj[texts] = text;
-
-return obj;
+    obj.texts = text;
+    
+    return obj;
 }
 
 /*
@@ -222,16 +238,39 @@ return obj;
      nodes: [div]
    }
  */
+
 function observeChildNodes(where, fn) {
+    const nodeArray = list => [...list];
+
+    function whatMutation(type, changedNodes) {
+        if (changedNodes && changedNodes.length > 0) {
+            fn({
+                type: type,
+                nodes: nodeArray(changedNodes)
+            });
+        }
+    }
+
+    let observer = new MutationObserver(function(mutations) {
+        if (mutations && mutations.length > 0) {
+            mutations.forEach(function(mutation) {
+                whatMutation('insert', mutation.addedNodes);
+                whatMutation('remove', mutation.removedNodes);
+            });
+        }
+
+    });
+
+    observer.observe(where, { childList: true });
 }
 
-// export {
-//     createDivWithText,
-//     prepend,
-//     findAllPSiblings,
-//     findError,
-//     deleteTextNodes,
-//     deleteTextNodesRecursive,
-//     collectDOMStat,
-//     observeChildNodes
-// };
+export {
+    createDivWithText,
+    prepend,
+    findAllPSiblings,
+    findError,
+    deleteTextNodes,
+    deleteTextNodesRecursive,
+    collectDOMStat,
+    observeChildNodes
+};
