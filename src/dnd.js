@@ -15,19 +15,55 @@
    const newDiv = document.createElement('div');
    homeworkContainer.appendChild(newDiv);
  */
-const homeworkContainer = document.querySelector('#homework-container');
-const button = document.createElement('button');
-homeworkContainer.appendChild(button);
+ const homeworkContainer = document.querySelector('#homework-container');
+ const button = document.createElement('button');
+ homeworkContainer.appendChild(button);
+ button.textContent = 'Нажми меня';
 
-button.addEventListener('click', function(e) {
-  e.preventDefault();
-  createElement('div');
-});
+ button.addEventListener('click', function(e) {
+  e.preventDefault();  
+  newDiv = document.createElement('div');
+  newDiv.style.width = getRandomInt(150, document.body.clientWidth) + 'px';
+  newDiv.style.height = getRandomInt(150, document.body.clientHeight) + 'px';
+  newDiv.style.background = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+  newDiv.style.position = 'absolute';
+  newDiv.style.top = getRandomInt(50, 800) + 'px';
+  newDiv.style.left = getRandomInt(50, 800) + 'px';
+  homeworkContainer.appendChild(newDiv);
+
+  let newDivs = document.getElementsByTagName('div');
+  let downX = 0,
+  downY = 0,
+  dragElement;
+        // clickElement = document.getElementsByTagName('div');
+        // console.log(clickElement);
+
+        let mouseDown = function(e) {
+          dragElement = e.target;
+          downX = e.offsetX;
+          downY = e.offsetY;
+          newDiv.addEventListener('mousemove', mouseMove);
+        };  
+
+        let mouseMove = function(e) {
+          dragElement.style.top = (e.clientY - downY) + 'px';
+          dragElement.style.left = (e.clientX - downX) + 'px';
+        };
+
+        let mouseUp = function(e) {
+          newDiv.removeEventListener('mousemove', mouseMove);
+        };
+
+        newDiv.addEventListener('mousedown', mouseDown);    
+        newDiv.addEventListener('mouseup', mouseUp);  
+
+      }); 
 
 
 
-
-
+ function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 /*
  Функция должна создавать и возвращать новый div с классом draggable-div и случайными размерами/цветом/позицией
