@@ -6,66 +6,94 @@
 	<script src="index.js"></script>	
 </head>
 <body>
-  
+  <div id="loading-block">Загрузка...</div>
+  <div id="filter-block" style="display: none;">
+      <input type="text" placeholder="название города" id="filter-input">
 
+      <div id="filter-result"></div>
+  </div>
 </body>
 <script>
 
+const loadingBlock = document.querySelector('#loading-block');
+const filterBlock = document.querySelector('#filter-block');
+const filterInput = document.querySelector('#filter-input');
+const filterResult = document.querySelector('#filter-result');
+let reloadDiv = document.createElement('div');
+reloadDiv.style.display = 'none';
+reloadDiv.innerHTML = '<span>Не удалось загрузить города</span><br><button id="reload-button">Повторить</button>';
+document.body.appendChild(reloadDiv);
+reloadButton = document.querySelector('#reload-button');
 
-const homeworkContainer = document.body;
-const button = document.createElement('button');
-homeworkContainer.appendChild(button);
-  button.textContent = 'Нажми меня';
+function xhrRequest(){
+    
+    let townPromise = new Promise(function(resolve) {
+        let xhr = new XMLHttpRequest();
 
-  button.addEventListener('click', function(e) {
-  e.preventDefault();  
-  newDiv = document.createElement('div');
-  newDiv.style.width = getRandomInt(150, document.body.clientWidth) + 'px';
-  newDiv.style.height = getRandomInt(150, document.body.clientHeight) + 'px';
-  newDiv.style.background = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
-  newDiv.style.position = 'absolute';
-  newDiv.style.top = getRandomInt(50, 800) + 'px';
-  newDiv.style.left = getRandomInt(50, 800) + 'px';
-  homeworkContainer.appendChild(newDiv);
+        xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
+        xhr.send(); 
+
+        xhr.addEventListener('load', () => {
+            parseTowns = JSON.parse(xhr.responseText);
+            resolve(parseTowns.sort(function (a, b) {
+                if (a.name > b.name) {
+                    return 1;
+                }
+                if (a.name < b.name) {
+                    return -1;
+                }
+                return 0;
+            }));
+            
+        });
+
+        xhr.addEventListener('progress', () => {
+           loadingBlock.style.display = 'none';
+           reloadDiv.style.display = 'none';
+           filterBlock.style.display = 'block';
+        }); 
+
+         xhr.addEventListener('error', () => {
+            reloadDiv.style.display = 'block';
+            filterBlock.style.display = 'none';
+            reloadButton.addEventListener('click', () => {
+              xhrRequest();
+            });
+        }); 
+    });
+
+    filterInput.addEventListener('keyup', () => {               
+      let inputValue = filterInput.value.toLowerCase();
+      let arrayResult = [];                    
+      parseTowns.forEach(function(item, i){
+        if (item.name.toLowerCase().includes(inputValue) === true) {
+          arrayResult.push(item.name);
+          console.log(arrayResult);
+          filterResult.innerText = arrayResult;
+          console.log(filterResult);
+        }
+      });
+    });
 
 
-    let newDivs = document.getElementsByTagName('div');
+    return townPromise;
+};
 
 
 
-      let downX = 0,
-      downY = 0,
-      dragElement;
-        // clickElement = document.getElementsByTagName('div');
-        // console.log(clickElement);
-
-        let mouseDown = function(e) {
-          dragElement = e.target;
-          downX = e.offsetX;
-          downY = e.offsetY;
-          newDiv.addEventListener('mousemove', mouseMove);
-        };  
-
-        let mouseMove = function(e) {
-          dragElement.style.top = (e.clientY - downY) + 'px';
-          dragElement.style.left = (e.clientX - downX) + 'px';
-        };
-
-        let mouseUp = function(e) {
-          newDiv.removeEventListener('mousemove', mouseMove);
-        };
-
-        newDiv.addEventListener('mousedown', mouseDown);    
-        newDiv.addEventListener('mouseup', mouseUp);  
-  
-});
-   
 
     
 
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+
+
+
+console.log(xhrRequest());
+
+
+
+   
+
+    
 
 
 
