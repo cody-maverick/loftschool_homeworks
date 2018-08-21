@@ -32,61 +32,70 @@ const homeworkContainer = document.querySelector('#homework-container');
 
 function reload() {    
 
-let reloadDiv = homeworkContainer.createElement('div');
-reloadDiv.style.display = 'none';
-reloadDiv.innerHTML = '<span>Не удалось загрузить города</span><br><button id="reload-button">Повторить</button>';
-homeworkContainer.appendChild(reloadDiv);
-reloadButton = homeworkContainer.querySelector('#reload-button');
+    let reloadDiv = homeworkContainer.createElement('div');
 
-function xhrRequest(){
+    reloadDiv.style.display = 'none';
+    reloadDiv.innerHTML = '<span>Не удалось загрузить города</span><br><button id="reload-button">Повторить</button>';
+    homeworkContainer.appendChild(reloadDiv);
+    reloadButton = homeworkContainer.querySelector('#reload-button');
     
-    let townPromise = new Promise(function(resolve) {
-        let xhr = new XMLHttpRequest();
-
-        xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
-        xhr.send(); 
-
-        xhr.addEventListener('load', () => {
-            parseTowns = JSON.parse(xhr.responseText);
-            resolve(parseTowns.sort(function (a, b) {
-                if (a.name > b.name) {
-                    return 1;
-                }
-                if (a.name < b.name) {
-                    return -1;
-                }
-                return 0;
-            })); 
-
-            filterInput.addEventListener('keyup', () => {               
-                let inputValue = filterInput.value.toLowerCase();
-                let arrayResult = [];                    
-                parseTowns.forEach(function(item, i){
-                    if (item.name.toLowerCase().includes(inputValue) === true) {
-                      arrayResult.push(item.name);                      
-                      filterResult.innerText = arrayResult;                      
+    function xhrRequest(){
+        
+        let townPromise = new Promise(function(resolve) {
+            let xhr = new XMLHttpRequest();
+    
+            xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
+            xhr.send(); 
+    
+            xhr.addEventListener('load', () => {
+                parseTowns = JSON.parse(xhr.responseText);
+                resolve(parseTowns.sort(function (a, b) {
+                    if (a.name > b.name) {
+                        return 1;
                     }
+                    if (a.name < b.name) {
+                        return -1;
+                    }
+                    return 0;
+                })); 
+    
+                filterInput.addEventListener('keyup', () => {               
+                    let inputValue = filterInput.value.toLowerCase();
+                    let arrayResult = [];                    
+                    parseTowns.forEach(function(item, i){
+                        if (item.name.toLowerCase().includes(inputValue) === true) {
+                          arrayResult.push(item.name);    
+                          arrayResult.splice(3);
+                        }                        
+                    });
+                    arrayResult.forEach((item) => {
+                        let resultDiv = homeworkContainer.createElement('div');
+                        resultDiv.textContent = item;
+                        filterInput.appendChild(resultDiv);
+                    }); 
                 });
-             });           
-        });
-
-        xhr.addEventListener('progress', () => {
-           loadingBlock.style.display = 'none';
-           reloadDiv.style.display = 'none';
-           filterBlock.style.display = 'block';
-        }); 
-
-         xhr.addEventListener('error', () => {
-            reloadDiv.style.display = 'block';
-            filterBlock.style.display = 'none';
-            reloadButton.addEventListener('click', () => {
-              xhrRequest();
+                filterInput.addEventListener('keydown', () => {
+                     filterResult.innerHTML='';
+                });           
             });
-        }); 
-    });
-
-    return townPromise;
-};
+    
+            xhr.addEventListener('progress', () => {
+               loadingBlock.style.display = 'none';
+               reloadDiv.style.display = 'none';
+               filterBlock.style.display = 'block';
+            }); 
+    
+             xhr.addEventListener('error', () => {
+                reloadDiv.style.display = 'block';
+                filterBlock.style.display = 'none';
+                reloadButton.addEventListener('click', () => {
+                  xhrRequest();
+                });
+            }); 
+        });
+    
+        return townPromise;
+    };
 };
 
 

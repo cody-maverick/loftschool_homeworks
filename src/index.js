@@ -54,6 +54,7 @@ function loadAndSortTowns() {
     });     
     return townPromise; 
 }
+
 export {
     delayPromise,
     loadAndSortTowns
