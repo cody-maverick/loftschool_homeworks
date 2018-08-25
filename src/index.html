@@ -15,69 +15,72 @@
 </body>
 <script>
 
-const loadingBlock = document.querySelector('#loading-block');
-const filterBlock = document.querySelector('#filter-block');
-const filterInput = document.querySelector('#filter-input');
-const filterResult = document.querySelector('#filter-result');
-let reloadDiv = document.createElement('div');
-reloadDiv.style.display = 'none';
-reloadDiv.innerHTML = '<span>Не удалось загрузить города</span><br><button id="reload-button">Повторить</button>';
-document.body.appendChild(reloadDiv);
-reloadButton = document.querySelector('#reload-button');
 
-function xhrRequest(){
+  
+
+// const loadingBlock = document.querySelector('#loading-block');
+// const filterBlock = document.querySelector('#filter-block');
+// const filterInput = document.querySelector('#filter-input');
+// const filterResult = document.querySelector('#filter-result');
+// let reloadDiv = document.createElement('div');
+// reloadDiv.style.display = 'none';
+// reloadDiv.innerHTML = '<span>Не удалось загрузить города</span><br><button id="reload-button">Повторить</button>';
+// document.body.appendChild(reloadDiv);
+// reloadButton = document.querySelector('#reload-button');
+
+// function xhrRequest(){
     
-    let townPromise = new Promise(function(resolve) {
-        let xhr = new XMLHttpRequest();
+//     let townPromise = new Promise(function(resolve) {
+//         let xhr = new XMLHttpRequest();
 
-        xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
-        xhr.send(); 
+//         xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
+//         xhr.send(); 
 
-        xhr.addEventListener('load', () => {
-            parseTowns = JSON.parse(xhr.responseText);
-            resolve(parseTowns.sort(function (a, b) {
-                if (a.name > b.name) {
-                    return 1;
-                }
-                if (a.name < b.name) {
-                    return -1;
-                }
-                return 0;
-            }));
+//         xhr.addEventListener('load', () => {
+//             parseTowns = JSON.parse(xhr.responseText);
+//             resolve(parseTowns.sort(function (a, b) {
+//                 if (a.name > b.name) {
+//                     return 1;
+//                 }
+//                 if (a.name < b.name) {
+//                     return -1;
+//                 }
+//                 return 0;
+//             }));
             
-        });
+//         });
 
-        xhr.addEventListener('progress', () => {
-           loadingBlock.style.display = 'none';
-           reloadDiv.style.display = 'none';
-           filterBlock.style.display = 'block';
-        }); 
+//         xhr.addEventListener('progress', () => {
+//            loadingBlock.style.display = 'none';
+//            reloadDiv.style.display = 'none';
+//            filterBlock.style.display = 'block';
+//         }); 
 
-         xhr.addEventListener('error', () => {
-            reloadDiv.style.display = 'block';
-            filterBlock.style.display = 'none';
-            reloadButton.addEventListener('click', () => {
-              xhrRequest();
-            });
-        }); 
-    });
+//          xhr.addEventListener('error', () => {
+//             reloadDiv.style.display = 'block';
+//             filterBlock.style.display = 'none';
+//             reloadButton.addEventListener('click', () => {
+//               xhrRequest();
+//             });
+//         }); 
+//     });
 
-    filterInput.addEventListener('keyup', () => {               
-      let inputValue = filterInput.value.toLowerCase();
-      let arrayResult = [];                    
-      parseTowns.forEach(function(item, i){
-        if (item.name.toLowerCase().includes(inputValue) === true) {
-          arrayResult.push(item.name);
-          console.log(arrayResult);
-          filterResult.innerText = arrayResult;
-          console.log(filterResult);
-        }
-      });
-    });
+//     filterInput.addEventListener('keyup', () => {               
+//       let inputValue = filterInput.value.toLowerCase();
+//       let arrayResult = [];                    
+//       parseTowns.forEach(function(item, i){
+//         if (item.name.toLowerCase().includes(inputValue) === true) {
+//           arrayResult.push(item.name);
+//           console.log(arrayResult);
+//           filterResult.innerText = arrayResult;
+//           console.log(filterResult);
+//         }
+//       });
+//     });
 
 
-    return townPromise;
-};
+//     return townPromise;
+// };
 
 
 
@@ -87,7 +90,7 @@ function xhrRequest(){
 
 
 
-console.log(xhrRequest());
+// console.log(xhrRequest());
 
 
 

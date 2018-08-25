@@ -44,9 +44,50 @@ const addButton = homeworkContainer.querySelector('#add-button');
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
 filterNameInput.addEventListener('keyup', function() {
-    // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+    cookieTableLoad();
 });
 
+let transformCookie = () => {
+    return document.cookie.split('; ').reduce((prev, current) => {
+        const [name , value] = current.split('=');
+
+        prev[name] = value;
+
+        return prev;
+    }, {});    
+};
+
+
+function isMatching(full, chunk) {
+    let fullLower = full.toLowerCase();
+    let chunkLower = chunk.toLowerCase();
+    if (fullLower.includes(chunkLower)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+let cookieTableLoad = () => {   
+  let cookieSplit = transformCookie();
+
+  listTable.innerHTML = '';   
+  for (var key in cookieSplit) { 
+      if(!(isMatching(key, filterNameInput.value) || isMatching(cookieSplit[key], filterNameInput.value))) continue;
+      listTable.innerHTML += `<tr><td>${key}</td><td>${cookieSplit[key]}</td><td><button class="${key}">Удалить</button></td></tr>`;    
+  }
+}
+
 addButton.addEventListener('click', () => {
-    // здесь можно обработать нажатие на кнопку "добавить cookie"
+    document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+    cookieTableLoad();
 });
+
+listTable.addEventListener('click', function (e) {    
+    if (e.target.classList.value) {
+        document.cookie = e.target.classList.value + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+    cookieTableLoad();
+});
+
+
